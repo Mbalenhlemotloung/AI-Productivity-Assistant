@@ -57,7 +57,7 @@ function ApplicationsPage() {
   const [apps, setApps] = useLocalStore<Application[]>("applications", []);
   const [editing, setEditing] = useState<Application | null>(null);
   const [form, setForm] = useState(empty);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<import("@/lib/store").FormErrors>({});
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<string>("all");
 

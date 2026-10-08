@@ -101,3 +101,7 @@ export function formatDate(date: string) {
     year: "numeric",
   });
 }
+
+export type FormErrors = Partial<
+  Record<"form" | "email" | "password" | "name" | "confirm" | "university" | "programme" | "website", string>
+>;

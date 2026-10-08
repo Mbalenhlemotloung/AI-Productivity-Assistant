@@ -33,7 +33,7 @@ const schema = z
 
 function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<import("@/lib/store").FormErrors>({});
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>

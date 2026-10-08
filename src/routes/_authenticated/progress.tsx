@@ -58,7 +58,7 @@ function ProgressPage() {
                     <Button size="icon" variant="ghost" aria-label={`Remove ${s.subject}`} onClick={() => setSubjects((a) => a.filter((x) => x.id !== s.id))}><Trash2 /></Button>
                   </span>
                 </div>
-                <Slider aria-label={`${s.subject} readiness`} value={[s.progress]} max={100} step={5} onValueChange={([v]) => setSubjects((a) => a.map((x) => (x.id === s.id ? { ...x, progress: v } : x)))} />
+                <Slider aria-label={`${s.subject} readiness`} value={[s.progress]} max={100} step={5} onValueChange={([v]) => setSubjects((a) => a.map((x) => (x.id === s.id ? { ...x, progress: v ?? 0 } : x)))} />
               </li>
             ))}
           </ul>

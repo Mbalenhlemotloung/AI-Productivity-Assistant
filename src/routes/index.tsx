@@ -33,7 +33,7 @@ function LoginPage() {
   const { user, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<import("@/lib/store").FormErrors>({});
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {

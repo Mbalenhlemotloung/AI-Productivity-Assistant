@@ -33,11 +33,15 @@ function SettingsPage() {
 
   async function save(e: React.FormEvent) {
     e.preventDefault();
-    if (name.trim().length < 2) return toast.error("Enter your name");
+    if (name.trim().length < 2) {
+      toast.error("Enter your name");
+      return;
+    }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ data: { full_name: name.trim().slice(0, 80) } });
     setBusy(false);
-    error ? toast.error(error.message) : toast.success("Profile saved");
+    if (error) toast.error(error.message);
+    else toast.success("Profile saved");
   }
 
   function clearData() {
