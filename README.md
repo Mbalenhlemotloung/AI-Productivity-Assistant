@@ -1,29 +1,44 @@
-# Welcome to your Lovable project
+# MatricEnhle — Your Matric-to-University Companion
 
-This project was built with [Lovable](https://lovable.dev).
+## Overview
+South African Grade 12 learners juggle exam preparation, university applications and NSFAS funding at the same time, usually across scattered websites and notes. MatricEnhle brings these into one friendly, responsive web app.
 
-## Build with Lovable
+## Features
+- **Secure accounts** — email/password sign-up with email confirmation, Google sign-in, show/hide password, password recovery and reset.
+- **Dashboard** — personalised welcome, exam countdowns, application deadlines, status summary, today's tasks, progress and deadline alerts.
+- **University Applications** — add/edit/delete applications, deadlines, statuses (Not Started → Accepted), reference numbers, notes and official links.
+- **NSFAS Support** — plain explanation, preparation and document checklists, personal status notes, link to https://www.nsfas.org.za/.
+- **Past Papers** — search and filter by subject, year and type. No fake downloads: the library is empty until real files are added to `PAPERS` in `src/routes/_authenticated/past-papers.tsx`.
+- **AI features** (real AI responses)
+  - AI Task Planner (Study Planner page)
+  - Notes Summariser & Research Assistant
+  - "Ask MatricEnhle" chatbot with follow-ups
+  - Smart Email Generator (formal / friendly / persuasive)
+- **Progress** — subject readiness sliders, task and application completion.
+- **Responsible AI** disclaimer on every AI tool.
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+## Technologies
+TanStack Start (React 19, Vite), Tailwind CSS v4, shadcn/ui, Lovable Cloud (authentication), Lovable AI Gateway via the Vercel AI SDK, Zod validation.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+## Setup
+```bash
+bun install
+bun run dev
 ```
+The app is built and hosted on Lovable; backend and AI keys are managed by Lovable Cloud.
 
-## Built with
+## AI integration
+All AI calls run on the server (`src/lib/ai.functions.ts` → `src/lib/ai.server.ts`). Each feature has its own structured system prompt. Only signed-in users can call the AI; the API key (`LOVABLE_API_KEY`) never reaches the browser. Inputs are validated with Zod and errors (rate limits, credits) are shown to the learner.
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+## Responsible AI
+- Visible disclaimer: AI can be wrong; verify with teachers and official university/NSFAS sources.
+- Learners are told not to enter confidential personal information.
+- Prompts forbid inventing dates, requirements, NSFAS rules or URLs.
+- The app never claims to submit university or NSFAS applications.
+
+## Data
+Application records, exams, tasks, checklists and preferences are stored in the browser's localStorage per account (this device only).
+
+## Team & repository
+- GitHub repository: _add link_
+- Team members: _add names_
