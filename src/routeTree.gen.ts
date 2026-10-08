@@ -14,7 +14,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthenticatedApplicationsRouteImport } from './routes/_authenticated/applications'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedNsfasRouteImport } from './routes/_authenticated/nsfas'
+import { Route as AuthenticatedPastPapersRouteImport } from './routes/_authenticated/past-papers'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,9 +43,25 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedApplicationsRoute =
+  AuthenticatedApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedNsfasRoute = AuthenticatedNsfasRouteImport.update({
+  id: '/nsfas',
+  path: '/nsfas',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPastPapersRoute = AuthenticatedPastPapersRouteImport.update({
+  id: '/past-papers',
+  path: '/past-papers',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -51,14 +70,20 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/applications': typeof AuthenticatedApplicationsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/nsfas': typeof AuthenticatedNsfasRoute
+  '/past-papers': typeof AuthenticatedPastPapersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/applications': typeof AuthenticatedApplicationsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/nsfas': typeof AuthenticatedNsfasRoute
+  '/past-papers': typeof AuthenticatedPastPapersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,14 +92,32 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/applications': typeof AuthenticatedApplicationsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/nsfas': typeof AuthenticatedNsfasRoute
+  '/_authenticated/past-papers': typeof AuthenticatedPastPapersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/forgot-password' | '/reset-password' | '/signup' | '/dashboard'
+    | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/signup'
+    | '/applications'
+    | '/dashboard'
+    | '/nsfas'
+    | '/past-papers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forgot-password' | '/reset-password' | '/signup' | '/dashboard'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/reset-password'
+    | '/signup'
+    | '/applications'
+    | '/dashboard'
+    | '/nsfas'
+    | '/past-papers'
   id:
     | '__root__'
     | '/'
@@ -82,7 +125,10 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/reset-password'
     | '/signup'
+    | '/_authenticated/applications'
     | '/_authenticated/dashboard'
+    | '/_authenticated/nsfas'
+    | '/_authenticated/past-papers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/applications': {
+      id: '/_authenticated/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof AuthenticatedApplicationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -137,15 +190,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/nsfas': {
+      id: '/_authenticated/nsfas'
+      path: '/nsfas'
+      fullPath: '/nsfas'
+      preLoaderRoute: typeof AuthenticatedNsfasRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/past-papers': {
+      id: '/_authenticated/past-papers'
+      path: '/past-papers'
+      fullPath: '/past-papers'
+      preLoaderRoute: typeof AuthenticatedPastPapersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedApplicationsRoute: typeof AuthenticatedApplicationsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedNsfasRoute: typeof AuthenticatedNsfasRoute
+  AuthenticatedPastPapersRoute: typeof AuthenticatedPastPapersRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedApplicationsRoute: AuthenticatedApplicationsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedNsfasRoute: AuthenticatedNsfasRoute,
+  AuthenticatedPastPapersRoute: AuthenticatedPastPapersRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
