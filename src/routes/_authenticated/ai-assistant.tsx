@@ -207,7 +207,7 @@ const MEETING_SECTIONS = [
 ] as const;
 
 /** Splits the AI's markdown into the six fixed sections; missing ones become "Not specified". */
-export function parseMeetingSections(text: string): Record<string, string> {
+function parseMeetingSections(text: string): Record<string, string> {
   const out: Record<string, string> = {};
   const parts = text.split(/^##\s+/m).slice(1);
   for (const p of parts) {
