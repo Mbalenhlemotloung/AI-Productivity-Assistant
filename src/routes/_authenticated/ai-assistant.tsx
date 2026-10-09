@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { FileText, Loader2, Mail, MessageCircle, Send, Trash2 } from "lucide-react";
+import { FileText, Loader2, Mail, MessageCircle, NotebookPen, Send, Trash2 } from "lucide-react";
 import { useAi } from "@/lib/use-ai";
 import { AiDisclaimer, CopyButton, Markdown, PageHeader, Panel } from "@/components/shared";
 import { Mascot } from "@/components/brand";
@@ -36,11 +36,13 @@ function AiPage() {
       <Tabs defaultValue="chat">
         <TabsList className="h-auto flex-wrap">
           <TabsTrigger value="chat"><MessageCircle className="mr-1.5 h-4 w-4" />Ask MatricEnhle</TabsTrigger>
-          <TabsTrigger value="summarise"><FileText className="mr-1.5 h-4 w-4" />Notes Summariser</TabsTrigger>
-          <TabsTrigger value="email"><Mail className="mr-1.5 h-4 w-4" />Email Generator</TabsTrigger>
+          <TabsTrigger value="summarise"><FileText className="mr-1.5 h-4 w-4" />Smart Summariser</TabsTrigger>
+          <TabsTrigger value="meeting"><NotebookPen className="mr-1.5 h-4 w-4" />Meeting Notes</TabsTrigger>
+          <TabsTrigger value="email"><Mail className="mr-1.5 h-4 w-4" />Email Wingmate</TabsTrigger>
         </TabsList>
         <TabsContent value="chat" className="mt-4"><Chat /></TabsContent>
         <TabsContent value="summarise" className="mt-4"><Summariser /></TabsContent>
+        <TabsContent value="meeting" className="mt-4"><MeetingSummariser /></TabsContent>
         <TabsContent value="email" className="mt-4"><EmailGen /></TabsContent>
       </Tabs>
     </div>

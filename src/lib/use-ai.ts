@@ -4,7 +4,7 @@ import { askAi } from "./ai.functions";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-export function useAi(feature: "planner" | "summarise" | "chat" | "email") {
+export function useAi(feature: "planner" | "summarise" | "meeting" | "chat" | "email") {
   const call = useServerFn(askAi);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
