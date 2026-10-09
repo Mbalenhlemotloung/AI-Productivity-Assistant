@@ -11,11 +11,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+const TABS = ["chat", "summarise", "email"] as const;
+type Tab = (typeof TABS)[number];
+
 export const Route = createFileRoute("/_authenticated/ai-assistant")({
+  validateSearch: (s: Record<string, unknown>): { tab?: Tab } =>
+    TABS.includes(s["tab"] as Tab) ? { tab: s["tab"] as Tab } : {},
   head: () => ({
     meta: [
       { title: "AI Study Assistant — MatricEnhle" },
-      { name: "description", content: "Ask MatricEnhle, summarise notes and write emails with AI." },
+      { name: "description", content: "Ask MatricEnhle, summarise study or meeting notes and write emails with AI." },
       { property: "og:title", content: "AI Study Assistant — MatricEnhle" },
       { property: "og:description", content: "AI-powered study help for matric learners." },
     ],
@@ -29,22 +34,39 @@ function ErrorNote({ error }: { error: string | null }) {
 }
 
 function AiPage() {
+  const { tab = "chat" } = Route.useSearch();
+  const navigate = Route.useNavigate();
   return (
     <div className="space-y-6">
       <PageHeader title="AI Study Assistant" subtitle="Real AI help for understanding, summarising and writing — the AI Task Planner lives in the Study Planner." />
       <AiDisclaimer />
-      <Tabs defaultValue="chat">
+      <Tabs value={tab} onValueChange={(v) => navigate({ search: { tab: v as Tab }, replace: true })}>
         <TabsList className="h-auto flex-wrap">
           <TabsTrigger value="chat"><MessageCircle className="mr-1.5 h-4 w-4" />Ask MatricEnhle</TabsTrigger>
           <TabsTrigger value="summarise"><FileText className="mr-1.5 h-4 w-4" />Smart Summariser</TabsTrigger>
-          <TabsTrigger value="meeting"><NotebookPen className="mr-1.5 h-4 w-4" />Meeting Notes</TabsTrigger>
           <TabsTrigger value="email"><Mail className="mr-1.5 h-4 w-4" />Email Wingmate</TabsTrigger>
         </TabsList>
         <TabsContent value="chat" className="mt-4"><Chat /></TabsContent>
-        <TabsContent value="summarise" className="mt-4"><Summariser /></TabsContent>
-        <TabsContent value="meeting" className="mt-4"><MeetingSummariser /></TabsContent>
+        <TabsContent value="summarise" className="mt-4"><SmartSummariser /></TabsContent>
         <TabsContent value="email" className="mt-4"><EmailGen /></TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function SmartSummariser() {
+  const [mode, setMode] = useState<"study" | "meeting">("meeting");
+  return (
+    <div className="space-y-4">
+      <div role="group" aria-label="Summariser type" className="inline-flex flex-wrap gap-2 rounded-xl bg-muted p-1">
+        <Button size="sm" variant={mode === "meeting" ? "default" : "ghost"} aria-pressed={mode === "meeting"} onClick={() => setMode("meeting")}>
+          <NotebookPen /> Meeting Notes Summariser
+        </Button>
+        <Button size="sm" variant={mode === "study" ? "default" : "ghost"} aria-pressed={mode === "study"} onClick={() => setMode("study")}>
+          <FileText /> Study Notes Summariser
+        </Button>
+      </div>
+      {mode === "meeting" ? <MeetingSummariser /> : <Summariser />}
     </div>
   );
 }

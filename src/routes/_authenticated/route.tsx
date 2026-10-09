@@ -4,6 +4,7 @@ import {
   BarChart3,
   BookOpen,
   CalendarCheck,
+  FileText,
   GraduationCap,
   HandCoins,
   LayoutDashboard,
@@ -32,7 +33,8 @@ const NAV = [
   { to: "/applications", label: "University Applications", icon: GraduationCap },
   { to: "/nsfas", label: "NSFAS Support", icon: HandCoins },
   { to: "/past-papers", label: "Past Papers", icon: BookOpen },
-  { to: "/ai-assistant", label: "AI Study Assistant", icon: Sparkles },
+  { to: "/ai-assistant", label: "AI Study Assistant", icon: Sparkles, search: { tab: "chat" } },
+  { to: "/ai-assistant", label: "Smart Summariser", icon: FileText, search: { tab: "summarise" } },
   { to: "/planner", label: "Study Planner", icon: CalendarCheck },
   { to: "/progress", label: "Progress", icon: BarChart3 },
   { to: "/settings", label: "Profile & Settings", icon: Settings },
@@ -51,10 +53,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         <Logo light />
       </Link>
       <nav aria-label="Main" className="flex-1 space-y-1">
-        {NAV.map(({ to, label, icon: Icon }) => (
+        {NAV.map(({ to, label, icon: Icon, ...rest }) => (
           <Link
-            key={to}
+            key={label}
             to={to}
+            search={("search" in rest ? rest.search : {}) as never}
+            activeOptions={{ includeSearch: "search" in rest }}
             onClick={onNavigate}
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-plum-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-star"
             activeProps={{ className: "bg-sidebar-accent text-plum-foreground shadow-glow" }}
