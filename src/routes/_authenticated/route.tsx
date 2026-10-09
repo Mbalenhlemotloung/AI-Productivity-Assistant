@@ -57,7 +57,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <Link
             key={label}
             to={to}
-            search={"search" in rest ? rest.search : undefined}
+            search={("search" in rest ? rest.search : {}) as never}
             activeOptions={{ includeSearch: "search" in rest }}
             onClick={onNavigate}
             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-plum-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-star"
