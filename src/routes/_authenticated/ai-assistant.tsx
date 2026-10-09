@@ -196,3 +196,86 @@ function EmailGen() {
     </div>
   );
 }
+
+const MEETING_SECTIONS = [
+  "Summary",
+  "Key points",
+  "Decisions and conclusions",
+  "Action items",
+  "Responsible persons",
+  "Deadlines",
+] as const;
+
+/** Splits the AI's markdown into the six fixed sections; missing ones become "Not specified". */
+export function parseMeetingSections(text: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  const parts = text.split(/^##\s+/m).slice(1);
+  for (const p of parts) {
+    const nl = p.indexOf("\n");
+    const head = (nl === -1 ? p : p.slice(0, nl)).trim().toLowerCase();
+    const body = nl === -1 ? "" : p.slice(nl + 1).trim();
+    const match = MEETING_SECTIONS.find((s) => head.startsWith(s.toLowerCase().split(" ")[0]!));
+    if (match) out[match] = body;
+  }
+  for (const s of MEETING_SECTIONS) if (!out[s]?.trim()) out[s] = "Not specified";
+  return out;
+}
+
+function MeetingSummariser() {
+  const { run, loading, error } = useAi("meeting");
+  const [notes, setNotes] = useState("");
+  const [sections, setSections] = useState<Record<string, string> | null>(null);
+  const [v, setV] = useState("");
+
+  async function go(e: React.FormEvent) {
+    e.preventDefault();
+    if (!notes.trim()) return setV("Please paste your notes first.");
+    if (notes.trim().length < 30) return setV("Paste at least 30 characters so there's something to summarise.");
+    setV("");
+    const r = await run([{ role: "user", content: `Here are my notes:\n\n${notes.trim()}` }]);
+    if (r) setSections(parseMeetingSections(r));
+  }
+
+  const all = sections ? MEETING_SECTIONS.map((s) => `${s}\n${sections[s]}`).join("\n\n") : "";
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[2fr_3fr]">
+      <Panel title="Meeting or session notes">
+        <form onSubmit={go} className="space-y-3">
+          <Label htmlFor="meeting-notes" className="text-sm text-muted-foreground">
+            Lecture, career guidance, university info session or other study-related notes. Leave out ID numbers and private details.
+          </Label>
+          <Textarea id="meeting-notes" rows={14} maxLength={10000} placeholder="Paste your notes here…" value={notes} onChange={(e) => setNotes(e.target.value)} />
+          <div className="text-xs text-muted-foreground">{notes.length}/10000</div>
+          {v && <p className="text-xs text-destructive">{v}</p>}
+          <ErrorNote error={error} />
+          <Button type="submit" variant="hero" disabled={loading} className="w-full">
+            {loading && <Loader2 className="animate-spin" />} Summarise Notes
+          </Button>
+        </form>
+      </Panel>
+      <Panel title="Results" action={sections && <CopyButton text={all} label="Copy all" />}>
+        {loading ? (
+          <p className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Summarising your notes…</p>
+        ) : !sections ? (
+          <p className="text-sm text-muted-foreground">Summary, key points, decisions, action items, responsible persons and deadlines will appear here — each editable and copyable.</p>
+        ) : (
+          <div className="space-y-4">
+            {MEETING_SECTIONS.map((s) => {
+              const id = `sec-${s.replace(/\s+/g, "-").toLowerCase()}`;
+              return (
+                <div key={s} className="rounded-xl border bg-background p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <Label htmlFor={id} className="font-bold text-primary">{s}</Label>
+                    <CopyButton text={sections[s] ?? ""} />
+                  </div>
+                  <Textarea id={id} rows={Math.min(10, Math.max(3, (sections[s] ?? "").split("\n").length + 1))} value={sections[s]} onChange={(e) => setSections({ ...sections, [s]: e.target.value })} />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Panel>
+    </div>
+  );
+}
